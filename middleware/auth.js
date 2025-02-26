@@ -14,7 +14,7 @@ exports.protect = async (req, res, next) => {
         req.user = await User.findById(decoded.id);
         next();
     } catch (err) {
-        res.status(401).json({ success: false, message: 'Not authorized' });
+    return res.status(401).json({ success: false, message: 'Not authorized' });
     }
 };
 
