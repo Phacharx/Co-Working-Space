@@ -1,6 +1,7 @@
 const Reservation = require('../models/Reservation');
 const Space = require('../models/Space');
 
+
 exports.getReservations = async (req, res, next) => {
     let query;
     if (req.user.role !== 'admin') {
@@ -53,19 +54,18 @@ exports.getReservation = async (req, res, next) => {
 
 exports.createReservation = async (req, res, next) => {
     try {
-        if (!req.body.space) {
-            return res.status(400).json({ success: false, message: "Space ID is required" });
-        }
+        req.body.space=req.params.spaceId;
 
-        const space = await Space.findById(req.body.space);
+        const space = await Space.findById(req.params.spaceId);
+
         if (!space) {
-            return res.status(404).json({ success: false, message: `No space with the id of ${req.body.space}` });
+            res.status(404).json({ success: false, message: `No space with the id of ${req.body.space}` });
         }
 
         req.body.user = req.user.id;
         
         const reservation = await Reservation.create(req.body);
-        res.status(201).json({ success: true, data: reservation });
+        res.status(200).json({ success: true, data: reservation });
 
     } catch (error) {
         console.log(error);
